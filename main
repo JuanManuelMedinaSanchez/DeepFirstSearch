@@ -1,4 +1,5 @@
 //Demo code. If you want or need the complete code please write me to prismatiklab@gmail.com
+//Writed by Juan Medina for DFS implementation in ncurses GUI for AI / Data structure analysis. 
 
 
 #include <ncurses.h>
@@ -55,32 +56,5 @@ int main() {
             --new_x;
           }
           break;
-      }
-      if (new_x != x || new_y != y) {
-        stack.push({new_x, new_y});
-        board[new_x][new_y] = 1;
-        dead_end = false;
-        break;
-      }
-    }
-    if (dead_end) {
-      stack.pop();
-    }
-    clear();
-    for (int i = 0; i < a; ++i) {
-      for (int j = 0; j < b; ++j) {
-        if (board[i][j] == 1) {
-          mvprintw(j, i, "o");
-        } else if (board[i][j] == 2) {
-          mvprintw(j, i, "x");
-        } else {
-          mvprintw(j, i, ".");
-        }
-      }
-    }
-    refresh();
-    usleep(300000);
-  }
-  endwin();
-  return 0;
-}
+     
+     ->->->->->->->->-> Continue
