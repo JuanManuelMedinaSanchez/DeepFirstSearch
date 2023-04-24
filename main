@@ -1,0 +1,86 @@
+//Demo code. If you want or need the complete code please write me to prismatiklab@gmail.com
+
+
+#include <ncurses.h>
+#include <cstdlib>
+#include <ctime>
+#include <unistd.h>
+#include <stack>
+
+const int a = 16;
+const int b = 16;
+int board[a][b] = {0};
+
+int main() {
+  initscr();
+  cbreak();
+  noecho();
+  keypad(stdscr, TRUE);
+  srand(time(nullptr));
+  int x = rand() % a;
+  int y = rand() % b;
+  board[x][y] = 1;
+  std::stack<std::pair<int, int>> stack;
+  stack.push({x, y});
+  while (true) {
+    if (stack.empty()) {
+      break;
+    }
+    std::pair<int, int> current = stack.top();
+    x = current.first;
+    y = current.second;
+    bool dead_end = true;
+    for (int dir = 0; dir < 4; ++dir) {
+      // Calculate the coordinates of the adjacent cell
+      int new_x = x;
+      int new_y = y;
+      switch (dir) {
+        case 0:
+          if (y > 0 && board[x][y-1] == 0) {
+            --new_y;
+          }
+          break;
+        case 1:
+          if (x < a - 1 && board[x+1][y] == 0) {
+            ++new_x;
+          }
+          break;
+        case 2:
+          if (y < b - 1 && board[x][y+1] == 0) {
+            ++new_y;
+          }
+          break;
+        case 3:
+          if (x > 0 && board[x-1][y] == 0) {
+            --new_x;
+          }
+          break;
+      }
+      if (new_x != x || new_y != y) {
+        stack.push({new_x, new_y});
+        board[new_x][new_y] = 1;
+        dead_end = false;
+        break;
+      }
+    }
+    if (dead_end) {
+      stack.pop();
+    }
+    clear();
+    for (int i = 0; i < a; ++i) {
+      for (int j = 0; j < b; ++j) {
+        if (board[i][j] == 1) {
+          mvprintw(j, i, "o");
+        } else if (board[i][j] == 2) {
+          mvprintw(j, i, "x");
+        } else {
+          mvprintw(j, i, ".");
+        }
+      }
+    }
+    refresh();
+    usleep(300000);
+  }
+  endwin();
+  return 0;
+}
